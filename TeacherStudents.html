@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All Students - Mokoto High</title>
+<style>
+body{font-family:Arial;margin:0;padding:20px;background:#f4f4f4;}
+table{width:100%;border-collapse:collapse;background:white;}
+th,td{padding:10px;border:1px solid #ddd;text-align:left;}
+</style>
+</head>
+<body>
+<h1>All Students</h1>
+<table>
+  <thead>
+    <tr><th>Email</th><th>Grade</th></tr>
+  </thead>
+  <tbody id="studentsTable"></tbody>
+</table>
+<div><a href="TeacherDashboard.html">Back to Dashboard</a></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "mokoto-high-school.firebaseapp.com",
+  databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+  projectId: "mokoto-high-school",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "32189864631",
+  appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+async function loadStudents(){
+  const snap = await get(ref(db,"students"));
+  const table = document.getElementById("studentsTable");
+  table.innerHTML = "";
+  if(snap.exists()){
+    const students = snap.val();
+    for (const id in students) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${students[id].email}</td><td>${students[id].grade || ''}</td>`;
+      table.appendChild(tr);
+    }
+  }
+}
+
+loadStudents();
+</script>
+</body>
+</html>

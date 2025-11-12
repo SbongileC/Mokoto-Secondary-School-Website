@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Send Announcement - Mokoto High</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:20px;}
+input,textarea,button{padding:8px;margin:5px;width:100%;}
+.announcement-list{margin-top:20px;}
+.announcement-item{background:white;padding:10px;margin-bottom:10px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+</style>
+</head>
+<body>
+
+<h1>Send Announcement to Students</h1>
+<input type="text" id="title" placeholder="Title">
+<textarea id="message" placeholder="Message"></textarea>
+<button id="sendBtn">Send Announcement</button>
+
+<div class="announcement-list" id="announcementList"></div>
+<div><a href="TeacherDashboard.html">Back to Dashboard</a></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyBUHlayR0u74ayIoHZY83Z3QII7D-1oECc",
+  authDomain: "mokoto-high-school.firebaseapp.com",
+  databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+  projectId: "mokoto-high-school",
+  storageBucket: "mokoto-high-school.firebasestorage.app",
+  messagingSenderId: "32189864631",
+  appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let teacherKey = null;
+
+// Check login
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "Login.html";
+    return;
+  }
+  teacherKey = user.uid; // just use UID for simplicity
+  loadAnnouncements();
+});
+
+// Send announcement
+document.getElementById("sendBtn").addEventListener("click", async () => {
+  const title = document.getElementById("title").value.trim();
+  const message = document.getElementById("message").value.trim();
+  if (!title || !message) return alert("Enter title and message");
+
+  const annRef = ref(db, "students_announcements");
+  const newRef = push(annRef);
+  await set(newRef, {
+    title,
+    message,
+    teacher: teacherKey,
+    date: new Date().toISOString()
+  });
+
+  document.getElementById("title").value = "";
+  document.getElementById("message").value = "";
+});
+
+// Load announcements
+function loadAnnouncements() {
+  const listEl = document.getElementById("announcementList");
+  const annRef = ref(db, "students_announcements");
+
+  // Listen for any changes in real-time
+  onValue(annRef, (snapshot) => {
+    listEl.innerHTML = "";
+    const data = snapshot.val();
+    if (!data) {
+      listEl.innerHTML = "<li>No announcements yet</li>";
+      return;
+    }
+    Object.values(data)
+      .sort((a, b) => new Date(b.date) - new Date(a.date)) // newest first
+      .forEach((ann) => {
+        const div = document.createElement("div");
+        div.className = "announcement-item";
+        div.innerHTML = `<strong>${ann.title}</strong><br>${ann.message}<br><small>${new Date(ann.date).toLocaleString()}</small>`;
+        listEl.appendChild(div);
+      });
+  });
+}
+</script>
+</body>
+</html>

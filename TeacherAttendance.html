@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Take Attendance - Mokoto High</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:20px;}
+.student-item{background:white;padding:10px;margin-bottom:5px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+button{margin-top:10px;padding:8px;}
+</style>
+</head>
+<body>
+<h1>Take Attendance</h1>
+<div id="studentList"></div>
+<button id="saveBtn">Save Attendance</button>
+<div><a href="TeacherDashboard.html">Back to Dashboard</a></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, get, set, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBUHlayR0u74ayIoHZY83Z3QII7D-1oECc",
+  authDomain: "mokoto-high-school.firebaseapp.com",
+  databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+  projectId: "mokoto-high-school",
+  storageBucket: "mokoto-high-school.firebasestorage.app",
+  messagingSenderId: "32189864631",
+  appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+let teacherKey;
+
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){window.location.href="Login.html"; return;}
+  const email = user.email.toLowerCase();
+  const teacherQuery = query(ref(db,"teachers"),orderByChild("email"),equalTo(email));
+  const snap = await get(teacherQuery);
+  if(!snap.exists()){await signOut(auth); alert("Access denied."); window.location.href="Login.html"; return;}
+  teacherKey = Object.keys(snap.val())[0];
+  loadStudents();
+});
+
+let attendance = {};
+
+async function loadStudents(){
+  const listEl = document.getElementById("studentList");
+  listEl.innerHTML="";
+  const snap = await get(ref(db,"students"));
+  if(snap.exists()){
+    const students = snap.val();
+  for(const id in students){
+  const div = document.createElement("div");
+  div.className="student-item";
+  div.innerHTML=`<label><input type="checkbox" id="${id}"> ${students[id].email}</label>`;
+  listEl.appendChild(div);
+}
+
+  }
+}
+
+// Save attendance
+document.getElementById("saveBtn").addEventListener("click", async()=>{
+  const snap = await get(ref(db,"students"));
+  const today = new Date().toISOString().split('T')[0];
+  for(const id in snap.val()){
+    const checked = document.getElementById(id).checked;
+    await set(ref(db, `teachers/${teacherKey}/attendance/${today}/${id}`), checked);
+  }
+  alert("Attendance saved!");
+});
+</script>
+</body>
+</html>

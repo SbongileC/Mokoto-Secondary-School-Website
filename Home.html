@@ -1,0 +1,183 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mokoto High School</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f5f5f5; color: #333; }
+
+    /* Header */
+    header {
+      background-color: #003366;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 50px;
+    }
+    header img { height: 60px; border-radius: 8px; }
+    header h1 { font-size: 24px; margin: 0; }
+    header p { font-size: 12px; margin: 0; color: #d9e6ff; }
+
+    /* Navigation */
+    nav {
+      background-color: #004080;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover { color: #ffd700; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      background: url('school_banner.jpg') center/cover no-repeat;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .hero h2 {
+      position: relative;
+      font-size: 48px;
+      text-shadow: 2px 2px 8px #000;
+      z-index: 1;
+    }
+
+    /* Mission and Vision */
+    .mission {
+      text-align: center;
+      padding: 50px 20px;
+      background: white;
+    }
+    .mission h3 {
+      color: #003366;
+      margin-bottom: 15px;
+    }
+    .mission p {
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    /* Info Cards */
+    .cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 50px 20px;
+      background: #f0f4ff;
+    }
+    .card {
+      width: 300px;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-5px); }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
+    .card h4 {
+      margin: 15px 0;
+      color: #004080;
+    }
+    .card a {
+      display: inline-block;
+      margin-bottom: 15px;
+      padding: 10px 20px;
+      background: #004080;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .card a:hover { background: #002b55; }
+
+    /* Footer */
+    footer {
+      background: #002b55;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <img src="logo.jpg" alt="Mokoto Logo">
+      <div>
+        <h1>Mokoto High School</h1>
+        <p>Knowledge. Integrity. Excellence.</p>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="Home.html">Home</a>
+    <a href="AboutUs.html">About</a>
+    <a href="Privacy.html">Privacy Policy</a>
+    <a href="ContactUs.html">Contact</a>
+    <a href="Testimonials.html">Testimonials</a>
+    <a href="Login.html"> Login</a>
+  </nav>
+
+  <section class="hero">
+    <h2>Welcome to Mokoto High School</h2>
+  </section>
+
+  <section class="mission">
+    <h3>Mission Statement</h3>
+    <p>Mokoto High School strives to provide quality education in a supportive environment that encourages academic excellence, moral integrity, and leadership skills.</p>
+
+    <h3 style="margin-top:40px;">Vision</h3>
+    <p>Our vision is to nurture well-rounded students equipped with the knowledge, confidence, and values to contribute positively to society.</p>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <img src="students.webp" alt="Our Students">
+      <h4>Our School</h4>
+      <a href="AboutUs.html">Learn More</a>
+    </div>
+
+    <div class="card">
+      <img src="contact.jpg" alt="Contact Us">
+      <h4>Contact Us</h4>
+      <a href="ContactUs.html">Get in Touch</a>
+    </div>
+
+  
+
+    <!-- ✅ New Testimonials Card -->
+    <div class="card">
+      <img src="logo.jpg" alt="Testimonials">
+      <h4>Testimonials</h4>
+      <a href="Testimonials.html">View Stories</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Mokoto High School | All Rights Reserved
+  </footer>
+</body>
+</html>

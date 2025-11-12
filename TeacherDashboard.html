@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Dashboard - Mokoto High</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('school.jpg') no-repeat center center/cover;
+      color: #333;
+    }
+    .nav-left {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.9);
+      margin: 0;
+    }
+    .nav-left li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .nav-left li a:hover {
+      color: #0056b3;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    header img {
+      width: 120px;
+    }
+    h1 {
+      margin-top: 10px;
+    }
+    .dashboard-container {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      margin: 0 0 15px;
+      font-size: 18px;
+      color: #333;
+    }
+    button.logout {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.logout:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+
+  <ul class="nav-left">
+    <li><a href="TeacherDashboard.html">Dashboard</a></li>
+    <li><a href="TeacherCourses.html">My Courses</a></li>
+    <li><a href="TeacherAnnouncements.html">Announcements</a></li>
+    <li><a href="TeacherProfile.html">Profile</a></li>
+  </ul>
+
+  <header>
+    <img src="logo.jpg" alt="School Logo">
+    <h1>Welcome, <span id="teacherName">Teacher</span></h1>
+  </header>
+
+<div class="dashboard-container">
+  <div class="card">
+    <h2>View All Students</h2>
+    <p>See all students enrolled in your classes.</p>
+    <a href="TeacherStudents.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>Upload Study Materials</h2>
+    <p>Add resources, links, or documents for students to access.</p>
+    <a href="TeacherMaterials.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>Post Announcement</h2>
+    <p>Send updates or notifications to your students.</p>
+    <a href="TeacherAnnouncements.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>Take Attendance</h2>
+    <p>Mark student attendance for your classes.</p>
+    <a href="TeacherAttendance.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>Upload Marks</h2>
+    <p>Enter grades for assignments, tests, or exams.</p>
+    <a href="TeacherMarks.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>Send Announcement</h2>
+    <p>Send important messages to all or selected students.</p>
+    <a href="TeacherSendAnnouncement.html">Go</a>
+  </div>
+  <div class="card">
+    <h2>My Timetable</h2>
+    <p>View or update your class schedule and timings.</p>
+    <a href="TeacherTimetable.html">Go</a>
+  </div>
+</div>
+
+
+  <div style="text-align:center;">
+    <button class="logout" id="logoutBtn">Logout</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBUHlayR0u74ayIoHZY83Z3QII7D-1oECc",
+      authDomain: "mokoto-high-school.firebaseapp.com",
+      databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+      projectId: "mokoto-high-school",
+      storageBucket: "mokoto-high-school.firebasestorage.app",
+      messagingSenderId: "32189864631",
+      appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32",
+      measurementId: "G-XNGBEK9CVL"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const teacherNameEl = document.getElementById("teacherName");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    // Check if user is logged in
+ onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "Login.html";
+    return;
+  }
+
+  // Instead of using UID, query teachers by email
+  const email = user.email.toLowerCase(); // normalize email
+  const teacherQuery = query(ref(db, "teachers"), orderByChild("email"), equalTo(email));
+  const teacherSnap = await get(teacherQuery);
+
+  if (!teacherSnap.exists()) {
+    // Not a teacher, redirect
+    auth.signOut();
+    alert("Access denied. You are not a teacher.");
+    window.location.href = "Login.html";
+    return;
+  }
+
+  // Set teacher name
+  const teacherData = Object.values(teacherSnap.val())[0]; // take first result
+  teacherNameEl.textContent = teacherData.firstname || "Teacher";
+});
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "Login.html";
+    });
+  </script>
+</body>
+</html>

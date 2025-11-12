@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upload Marks - Mokoto High</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:20px;}
+input, select, button{padding:8px;margin:5px;width:200px;}
+.student-item{margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<h1>Upload Marks</h1>
+<select id="subjectSelect">
+  <option value="">Select Subject</option>
+</select>
+
+<div id="studentList"></div>
+<button id="saveMarksBtn">Save Marks</button>
+<div><a href="TeacherDashboard.html">Back to Dashboard</a></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, get, set, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBUHlayR0u74ayIoHZY83Z3QII7D-1oECc",
+  authDomain: "mokoto-high-school.firebaseapp.com",
+  databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+  projectId: "mokoto-high-school",
+  storageBucket: "mokoto-high-school.firebasestorage.app",
+  messagingSenderId: "32189864631",
+  appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+let teacherKey;
+let subjects = [];
+
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){window.location.href="Login.html"; return;}
+  const email = user.email.toLowerCase();
+  const teacherQuery = query(ref(db,"teachers"),orderByChild("email"),equalTo(email));
+  const snap = await get(teacherQuery);
+  if(!snap.exists()){await signOut(auth); alert("Access denied."); window.location.href="Login.html"; return;}
+  teacherKey = Object.keys(snap.val())[0];
+  loadSubjects();
+  loadStudents();
+});
+
+// Load subjects
+async function loadSubjects(){
+  const select = document.getElementById("subjectSelect");
+  const snap = await get(ref(db, `teachers/${teacherKey}/subjects`));
+  if(snap.exists()){
+    subjects = snap.val();
+    for(const id in subjects){
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = subjects[id].name;
+      select.appendChild(opt);
+    }
+  }
+}
+
+// Load students
+async function loadStudents(){
+  const listEl = document.getElementById("studentList");
+  listEl.innerHTML="";
+  const snap = await get(ref(db,"students"));
+  if(snap.exists()){
+    const students = snap.val();
+   for(const id in students){
+  const div = document.createElement("div");
+  div.className="student-item";
+  div.innerHTML=`${students[id].email}: <input type="number" id="${id}" placeholder="Marks" min="0" max="100">`;
+  listEl.appendChild(div);
+}
+
+  }
+}
+
+// Save marks
+document.getElementById("saveMarksBtn").addEventListener("click", async () => {
+  const subjectId = document.getElementById("subjectSelect").value;
+  if (!subjectId) return alert("Select a subject");
+
+  const studentsSnap = await get(ref(db, "students"));
+  if (!studentsSnap.exists()) return alert("No students found");
+
+  const students = studentsSnap.val();
+  const date = new Date().toISOString().split('T')[0];
+
+  for (const studentId in students) {
+    const inputEl = document.getElementById(studentId);
+    if (!inputEl) continue; // Skip if input element is missing
+
+    const mark = inputEl.value;
+    if (mark !== "") {
+      await set(ref(db, `teachers/${teacherKey}/marks/${subjectId}/${studentId}/${date}`), Number(mark));
+    }
+  }
+
+  alert("Marks successfully saved!");
+});
+
+</script>
+</body>
+</html>

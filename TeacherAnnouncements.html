@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Post Announcements - Mokoto High</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:20px;}
+input,textarea,button{padding:8px;margin:5px;width:100%;}
+.announcement-list{margin-top:20px;}
+.announcement-item{background:white;padding:10px;margin-bottom:10px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+</style>
+</head>
+<body>
+<h1>Post Announcement</h1>
+<input type="text" id="title" placeholder="Title">
+<textarea id="message" placeholder="Message"></textarea>
+<button id="postBtn">Post Announcement</button>
+
+<div class="announcement-list" id="announcementList"></div>
+<div><a href="TeacherDashboard.html">Back to Dashboard</a></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBUHlayR0u74ayIoHZY83Z3QII7D-1oECc",
+  authDomain: "mokoto-high-school.firebaseapp.com",
+  databaseURL: "https://mokoto-high-school-default-rtdb.firebaseio.com",
+  projectId: "mokoto-high-school",
+  storageBucket: "mokoto-high-school.firebasestorage.app",
+  messagingSenderId: "32189864631",
+  appId: "1:32189864631:web:d4aa5f46f4f87caa0c4b32"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+let teacherKey;
+
+// Auth check
+onAuthStateChanged(auth, async (user)=>{
+  if(!user){window.location.href="Login.html"; return;}
+  const email = user.email.toLowerCase();
+  const teacherQuery = query(ref(db,"teachers"),orderByChild("email"),equalTo(email));
+  const snap = await get(teacherQuery);
+  if(!snap.exists()){await signOut(auth); alert("Access denied."); window.location.href="Login.html"; return;}
+  teacherKey = Object.keys(snap.val())[0];
+  loadAnnouncements();
+});
+
+// Post announcement
+document.getElementById("postBtn").addEventListener("click", async()=>{
+  const title = document.getElementById("title").value.trim();
+  const msg = document.getElementById("message").value.trim();
+  if(!title || !msg) return alert("Enter title and message");
+  const annRef = ref(db, `teachers/${teacherKey}/announcements`);
+  const newRef = push(annRef);
+  await set(newRef, {title, message: msg, date: new Date().toISOString()});
+  document.getElementById("title").value="";
+  document.getElementById("message").value="";
+  loadAnnouncements();
+});
+
+// Load announcements
+async function loadAnnouncements(){
+  const listEl = document.getElementById("announcementList");
+  listEl.innerHTML="";
+  const snap = await get(ref(db, `teachers/${teacherKey}/announcements`));
+  if(snap.exists()){
+    const anns = snap.val();
+    for(const id in anns){
+      const div = document.createElement("div");
+      div.className="announcement-item";
+      div.innerHTML=`<strong>${anns[id].title}</strong> <br>${anns[id].message} <br><small>${new Date(anns[id].date).toLocaleString()}</small>`;
+      listEl.appendChild(div);
+    }
+  }
+}
+</script>
+</body>
+</html>

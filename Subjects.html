@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal - Mokoto High School</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('school.jpg.jpg') no-repeat center center/cover;
+    }
+
+    /* Navigation */
+    .nav-left {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.9);
+      margin: 0;
+      align-items: center;
+    }
+
+    .nav-left li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .nav-left li a:hover { color: #0056b3; }
+
+    .back-arrow a {
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+      margin-right: 20px;
+    }
+    .back-arrow a:hover { color: #0056b3; }
+
+    header {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      position: relative;
+    }
+
+    header img { width: 120px; }
+
+    #logoutBtn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      padding: 8px 15px;
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    h1 { margin-top: 10px; }
+
+    #greeting {
+      text-align: center;
+      font-size: 18px;
+      color: #222;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .courses-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .course-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .course-card:hover { transform: translateY(-5px); }
+
+    .course-card h2 { margin: 0 0 15px; font-size: 18px; color: #333; }
+
+    .section-title { font-weight: bold; margin-top: 15px; }
+
+    .course-card button {
+      padding: 8px 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #ff6600;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .course-card button:hover { background: #e65c00; }
+
+    input[type="file"] { margin-top: 10px; }
+
+    ul { padding-left: 20px; }
+    ul li { margin-bottom: 6px; }
+
+    .portal-section { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <div style="display:flex; align-items:center; background: rgba(255,255,255,0.9); padding:15px 30px;">
+    <div class="back-arrow">
+      <a href="Home.html">&#8592; Back to Home</a>
+    </div>
+    <ul class="nav-left">
+      <li><a href="Home.html">Home</a></li>
+      <li><a href="Subjects.html">Subjects</a></li>
+      <li><a href="AboutUs.html">About</a></li>
+      <li><a href="ContactUs.html">Contact</a></li>
+      <li><a href="Testimonials.html">Testimonials</a></li>
+      <li><a href="Privacy.html">Privacy Policy</a></li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <img src="logo.jpg" alt="School Logo">
+    <h1>Student Portal</h1>
+    <div id="greeting">Welcome, Student!</div>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <!-- Courses Section -->
+  <section class="courses-container">
+
+    <!-- Mathematics -->
+    <div class="course-card" data-subject="Mathematics">
+      <h2>Mathematics</h2>
+      <div class="section-title">Study Materials:</div>
+      <ul>
+        <li><a href="https://youtu.be/JbhBdOfMEPs?si=CIVjDsDUcxU9nS5j" target="_blank">Tutoring videos 📺</a></li>
+        <li><a href="https://www.education.gov.za/Curriculum/LearningandTeachingSupportMaterials(LTSM)/DigitalContent/StateOwnedTextbooksGrade4TO9.aspx" target="_blank">Study materials 📘</a></li>
+        <li><a href="https://www.mathsx.co.za/textbooks/free-maths-textbooks/" target="_blank">Textbooks 📚</a></li>
+      </ul>
+      <div class="portal-section">
+        <div class="section-title">Upload Homework / Assignment:</div>
+        <input type="file" id="math-upload">
+        <button onclick="alert('Homework/Assignment uploaded!')">Upload</button>
+        <div class="section-title">Marks:</div>
+        <ul class="marks-list"><li>Loading...</li></ul>
+        <div class="section-title">Announcements:</div>
+        <ul class="announcements-list"><li>Loading...</li></ul>
+        <div class="section-title">Timetable:</div>
+        <ul class="timetable-list"><li>Loading...</li></ul>
+      </div>
+    </div>
+
+    <!-- Physical Science -->
+    <div class="course-card" data-subject="Physical Science">
+      <h2>Physical Science</h2>
+      <div class="section-title">Study Materials:</div>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=b1t41Q3xRM8" target="_blank">Tutoring videos 📺</a></li>
+        <li><a href="https://www.ck12.org/assessment/ui/browse/practice/physical-science/" target="_blank">Study materials 📘</a></li>
+        <li><a href="https://www.siyavula.com/read" target="_blank">Textbooks 📚</a></li>
+      </ul>
+      <div class="portal-section">
+        <div class="section-title">Upload Homework / Assignment:</div>
+        <input type="file" id="ps-upload">
+        <button onclick="alert('Homework/Assignment uploaded!')">Upload</button>
+        <div class="section-title">Marks:</div>
+        <ul class="marks-list"><li>Loading...</li></ul>
+        <div class="section-title">Announcements:</div>
+        <ul class="announcements-list"><li>Loading...</li></ul>
+        <div class="section-title">Timetable:</div>
+        <ul class="timetable-list"><li>Loading...</li></ul>
+      </div>
+    </div>
+
+    <!-- English -->
+    <div class="course-card" data-subject="English">
+      <h2>English</h2>
+      <div class="section-title">Study Materials:</div>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=lD1ev5Vtg7U" target="_blank">Tutoring videos 📺</a></li>
+        <li><a href="https://www.wozamatrics.co.za/wp-content/uploads/2022/01/ENGLISH-INTEGRATED-LANGUAGE-LEARNING_BOOK-2.pdf" target="_blank">Study materials 📘</a></li>
+        <li><a href="https://www.education.gov.za/Curriculum/LearningandTeachingSupportMaterials(LTSM)/DigitalContent/StateOwnedTextbooksGrade10to12.aspx" target="_blank">Textbooks 📚</a></li>
+      </ul>
+      <div class="portal-section">
+        <div class="section-title">Upload Homework / Assignment:</div>
+        <input type="file" id="eng-upload">
+        <button onclick="alert('Homework/Assignment uploaded!')">Upload</button>
+        <div class="section-title">Marks:</div>
+        <ul class="marks-list"><li>Loading...</li></ul>
+        <div class="section-title">Announcements:</div>
+        <ul class="announcements-list"><li>Loading...</li></ul>
+        <div class="section-title">Timetable:</div>
+        <ul class="timetable-list"><li>Loading...</li></ul>
+      </div>
+    </div>
+
+    <!-- Life Science -->
+    <div class="course-card" data-subject="Life Science">
+      <h2>Life Science</h2>
+      <div class="section-title">Study Materials:</div>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=NwFD8Lxr7xI" target="_blank">Tutoring videos 📺</a></li>
+        <li><a href="https://www.education.gov.za/SelfStudyGuidesGrade10-12.aspx" target="_blank">Study materials 📘</a></li>
+        <li><a href="https://www.siyavula.com/read" target="_blank">Textbooks 📚</a></li>
+      </ul>
+      <div class="portal-section">
+        <div class="section-title">Upload Homework / Assignment:</div>
+        <input type="file" id="ls-upload">
+        <button onclick="alert('Homework/Assignment uploaded!')">Upload</button>
+        <div class="section-title">Marks:</div>
+        <ul class="marks-list"><li>Loading...</li></ul>
+        <div class="section-title">Announcements:</div>
+        <ul class="announcements-list"><li>Loading...</li></ul>
+        <div class="section-title">Timetable:</div>
+        <ul class="timetable-list"><li>Loading...</li></ul>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+      databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+      projectId: "YOUR_FIREBASE_PROJECT_ID",
+      storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+      appId: "YOUR_FIREBASE_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    let studentKey = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { location.href = "Login.html"; return; }
+      const greeting = document.getElementById("greeting");
+      greeting.textContent = `Welcome, ${user.email}!`;
+
+      // Find student record in DB
+      const studentsSnap = await get(query(ref(db, "students"), orderByChild("email"), equalTo(user.email.toLowerCase())));
+      if (!studentsSnap.exists()) { await signOut(auth); alert("Access denied."); location.href="Login.html"; return; }
+      studentKey = Object.keys(studentsSnap.val())[0];
+
+      // Load marks, announcements, timetable
+      loadStudentData();
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => location.href="Login.html");
+    });
+
+    async function loadStudentData() {
+      const cards = document.querySelectorAll(".course-card");
+      for (const card of cards) {
+        const subject = card.dataset.subject;
+
+        // Load marks
+        const marksList = card.querySelector(".marks-list");
+        marksList.innerHTML = "<li>Loading...</li>";
+        const marksSnap = await get(ref(db, `students/${studentKey}/marks/${subject}`));
+        if (marksSnap.exists()) {
+          marksList.innerHTML = "";
+          const marks = marksSnap.val();
+          for (const date in marks) {
+            const li = document.createElement("li");
+            li.textContent = `${date}: ${marks[date]}`;
+            marksList.appendChild(li);
+          }
+        } else marksList.innerHTML = "<li>No marks yet</li>";
+
+        // Load announcements
+        const announcementsList = card.querySelector(".announcements-list");
+        announcementsList.innerHTML = "<li>Loading...</li>";
+        const annSnap = await get(ref(db, `students_announcements`));
+        announcementsList.innerHTML = "";
+        if (annSnap.exists()) {
+          const allAnns = annSnap.val();
+          for (const id in allAnns) {
+            if (allAnns[id].subject === subject) {
+              const li = document.createElement("li");
+              li.textContent = allAnns[id].title + " - " + allAnns[id].message;
+              announcementsList.appendChild(li);
+            }
+          }
+        }
+        if (announcementsList.innerHTML === "") announcementsList.innerHTML="<li>No announcements</li>";
+
+        // Load timetable
+        const timetableList = card.querySelector(".timetable-list");
+        timetableList.innerHTML = "<li>Loading...</li>";
+        const ttSnap = await get(ref(db, `students/${studentKey}/timetable/${subject}`));
+        timetableList.innerHTML = "";
+        if (ttSnap.exists()) {
+          const timetable = ttSnap.val();
+          for (const day in timetable) {
+            const li = document.createElement("li");
+            li.textContent = `${day}: ${Object.values(timetable[day]).join(", ")}`;
+            timetableList.appendChild(li);
+          }
+        } else timetableList.innerHTML="<li>No timetable</li>";
+      }
+    }
+  </script>
+
+</body>
+</html>
